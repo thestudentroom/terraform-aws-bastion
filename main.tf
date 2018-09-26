@@ -9,7 +9,7 @@ data "template_file" "user_data" {
 
 # Get default security group
 data "aws_security_group" "default" {
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = "${var.vpc_id}"
   name   = "default"
 }
 
