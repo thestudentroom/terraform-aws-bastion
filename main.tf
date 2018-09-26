@@ -57,9 +57,9 @@ resource "aws_security_group" "bastion_host_security_group" {
   }
 
   egress {
-    from_port   = "${var.private_ssh_port}"
+    from_port   = "22"
     protocol    = "TCP"
-    to_port     = "${var.private_ssh_port}"
+    to_port     = "22"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -166,7 +166,7 @@ resource "aws_lb" "bastion_lb" {
 }
 
 resource "aws_lb_target_group" "bastion_lb_target_group" {
-  port        = "${var.public_ssh_port}"
+  port        = "22"
   protocol    = "TCP"
   vpc_id      = "${var.vpc_id}"
   target_type = "instance"
