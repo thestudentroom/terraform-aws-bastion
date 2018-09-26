@@ -2,6 +2,8 @@ data "template_file" "user_data" {
   template = "${file("${path.module}/user_data.sh")}"
 
   vars {
+    aws_region   = "${var.region}"
+    bucket_name  = "${var.bucket_name}"
     duo_ikey     = "${var.duo_ikey}"
     duo_skey     = "${var.duo_skey}"
     duo_host_api = "${var.duo_host_api}"
