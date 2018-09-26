@@ -104,3 +104,18 @@ variable "log_expiry_days" {
   description = "Number of days before logs expiration"
   default     = 90
 }
+
+variable "duo_ikey" {
+  description = "Duo Intergration Key"
+  default     = "oj3iwfh339f3n"
+}
+
+variable "duo_skey" {
+  description = "Duo Secret Key"
+  default     = "oj3iwfh339f3n"
+}
+
+variable "duo_host_api" {
+  description = "Duo Host API"
+  default     = "duosecurity.com"
+}
