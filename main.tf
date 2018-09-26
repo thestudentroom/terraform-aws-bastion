@@ -204,7 +204,7 @@ resource "aws_launch_configuration" "bastion_launch_configuration" {
   key_name                    = "${var.bastion_host_key_pair}"
 
   security_groups = [
-    "${aws_security_group.bastion_host_security_group.id}",
+    "world_to_bastion_instance",
     "default",
   ]
 
