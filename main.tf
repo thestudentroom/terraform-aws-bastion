@@ -186,7 +186,7 @@ resource "aws_lb_listener" "bastion_lb_listener_22" {
   }
 
   load_balancer_arn = "${aws_lb.bastion_lb.arn}"
-  port              = "${var.public_ssh_port}"
+  port              = "22"
   protocol          = "TCP"
 }
 
