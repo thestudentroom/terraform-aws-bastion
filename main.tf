@@ -7,6 +7,12 @@ data "template_file" "user_data" {
   }
 }
 
+# Get default security group
+data "aws_security_group" "default" {
+  vpc_id = "${data.aws_vpc.default.id}"
+  name   = "default"
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "${var.bucket_name}"
   acl    = "bucket-owner-full-control"
@@ -204,8 +210,8 @@ resource "aws_launch_configuration" "bastion_launch_configuration" {
   key_name                    = "${var.bastion_host_key_pair}"
 
   security_groups = [
-    "world_to_bastion_instance",
-    "default",
+    "${aws_security_group.bastion_host_security_group.id}",
+    "${data.aws_security_group.default.id}",
   ]
 
   user_data = "${data.template_file.user_data.rendered}"
