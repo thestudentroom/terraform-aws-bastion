@@ -3,7 +3,7 @@ variable "bucket_name" {
 }
 
 variable "bucket_versioning" {
-  default = true
+  default     = true
   description = "Enable bucket versioning or not"
 }
 
@@ -103,14 +103,4 @@ variable "log_glacier_days" {
 variable "log_expiry_days" {
   description = "Number of days before logs expiration"
   default     = 90
-}
-
-variable "public_ssh_port" {
-  description = "Set the SSH port to use from desktop to the bastion"
-  default     = 22
-}
-
-variable "private_ssh_port" {
-  description = "Set the SSH port to use between the bastion and private instance"
-  default     = 22
 }

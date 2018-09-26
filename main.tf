@@ -45,13 +45,14 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 resource "aws_security_group" "bastion_host_security_group" {
+  name        = "world_to_bastion_instance"
   description = "Enable SSH access to the bastion host from external via SSH port"
   vpc_id      = "${var.vpc_id}"
 
   ingress {
-    from_port   = "${var.public_ssh_port}"
+    from_port   = "22"
     protocol    = "TCP"
-    to_port     = "${var.public_ssh_port}"
+    to_port     = "22"
     cidr_blocks = "${var.cidrs}"
   }
 
@@ -62,31 +63,18 @@ resource "aws_security_group" "bastion_host_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = "${merge(var.tags)}"
 }
 
 resource "aws_security_group" "private_instances_security_group" {
+  name        = "bastion_to_private_instances"
   description = "Enable SSH access to the Private instances from the bastion via SSH port"
   vpc_id      = "${var.vpc_id}"
 
   ingress {
-    from_port = "${var.private_ssh_port}"
+    from_port = "22"
     protocol  = "TCP"
-    to_port   = "${var.private_ssh_port}"
+    to_port   = "22"
 
     security_groups = [
       "${aws_security_group.bastion_host_security_group.id}",
@@ -217,6 +205,7 @@ resource "aws_launch_configuration" "bastion_launch_configuration" {
 
   security_groups = [
     "${aws_security_group.bastion_host_security_group.id}",
+    "default",
   ]
 
   user_data = "${data.template_file.user_data.rendered}"
