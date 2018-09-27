@@ -48,6 +48,7 @@ awk '!/X11Forwarding/' /etc/ssh/sshd_config > temp && mv temp /etc/ssh/sshd_conf
 echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
 echo "PermitTunnel no" >> /etc/ssh/sshd_config
 echo "X11Forwarding no" >> /etc/ssh/sshd_config
+echo 'ClientAliveInterval 60' >> /etc/ssh/sshd_config
 
 
 # 3. Prevent bastion host users from viewing processes owned by other users, because the log
