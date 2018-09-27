@@ -19,11 +19,12 @@ tar zxf /home/ec2-user/duo_unix-1.10.5.tar.gz
 cd /home/ec2-user/duo_unix-1.10.5/ && ./configure --prefix=/usr && make && sudo make install
 
 # Testing - Need better implementation
-echo "[duo]" >> /etc/duo/login_duo.conf
-echo "ikey = ${duo_ikey}" >> /etc/duo/login_duo.conf
-echo "skey = ${duo_skey}" >> /etc/duo/login_duo.conf
-echo "host = ${duo_host_api}" >> /etc/duo/login_duo.conf
-
+echo > /etc/duo/login_duo.conf << 'EOF'
+[duo]
+ikey = ${duo_ikey}
+skey = ${duo_skey}
+host = ${duo_host_api}
+EOF
 
 # Make OpenSSH execute a custom script on logins
 #echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
