@@ -7,6 +7,7 @@ data "template_file" "user_data" {
     duo_ikey     = "${var.duo_ikey}"
     duo_skey     = "${var.duo_skey}"
     duo_host_api = "${var.duo_host_api}"
+    company_name = "${var.company_name}"
   }
 }
 

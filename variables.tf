@@ -119,3 +119,8 @@ variable "duo_host_api" {
   description = "Duo Host API"
   default     = "duosecurity.com"
 }
+
+variable "company_name" {
+  description = "Company name for MOTD"
+  default     = "defaultcompanyname"
+}

@@ -24,8 +24,17 @@ echo "ikey = ${duo_ikey}" >> /etc/duo/login_duo.conf
 echo "skey = ${duo_skey}" >> /etc/duo/login_duo.conf
 echo "host = ${duo_host_api}" >> /etc/duo/login_duo.conf
 echo "groups = bastion" >> /etc/duo/login_duo.conf
+echo "motd = yes"
 
-/usr/sbin/addgroup bastion
+/usr/sbin/groupadd bastion
+
+echo > /etc/motd << 'EOF'
+***** ${var.company_name} Bastion Host *****
+This is a private system that that is controled by the ${var.company_name} Platform Team.
+Access to sudo is prohibited due to the fact it is NOT needed, contact the Platform Team if you have any questions.
+Access and commands are logged as well as MFA via Duo active for security reasons.
+Disconnect IMMEDIATELY if you are not an authorized user!
+EOF
 
 # Make OpenSSH execute a custom script on logins
 echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
@@ -44,8 +53,6 @@ echo "X11Forwarding no" >> /etc/ssh/sshd_config
 mount -o remount,rw,hidepid=2 /proc
 awk '!/proc/' /etc/fstab > temp && mv temp /etc/fstab
 echo "proc /proc proc defaults,hidepid=2 0 0" >> /etc/fstab
-
-echo "%bastion	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers
 
 # Restart the SSH service to apply /etc/ssh/sshd_config modifications.
 service sshd restart
