@@ -28,7 +28,7 @@ echo "motd = yes" >> /etc/duo/login_duo.conf
 
 /usr/sbin/groupadd bastion
 
-cat > /etc/motd << 'EOF'
+cat > /etc/update-motd.d/30-banner << 'EOF'
 ***** ${company_name} Bastion Host *****
 This is a private system that that is controled by the ${company_name} Platform Team.
 Access to sudo is prohibited due to the fact it is NOT needed, contact the Platform Team if you have any questions.
