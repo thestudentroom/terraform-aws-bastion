@@ -122,6 +122,14 @@ while read line; do
         chmod 600 /home/$USER_NAME/.ssh/authorized_keys
         chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh/authorized_keys
         aws s3 cp s3://${bucket_name}/private-keys/ /home/$USER_NAME/.ssh/. --recursive --region ${aws_region}
+        cat > /home/$USER_NAME/.ssh/config << 'EOF'
+        Host *
+          User ubuntu
+          IdentityFile /home/$USER_NAME/.ssh/packer.key
+        Host *prd.eu-west-1.aws*
+          User access
+          IdentityFile /home/$USER_NAME/.ssh/production_access.key
+        EOF
         /usr/sbin/usermod -aG bastion $USER_NAME
       fi
     fi
