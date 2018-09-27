@@ -19,13 +19,11 @@ tar zxf /home/ec2-user/duo_unix-1.10.5.tar.gz
 cd /home/ec2-user/duo_unix-1.10.5/ && ./configure --prefix=/usr && make && sudo make install
 
 # Testing - Need better implementation
-echo > /etc/duo/login_duo.conf << 'EOF'
-[duo]
-ikey = ${duo_ikey}
-skey = ${duo_skey}
-host = ${duo_host_api}
-# Exclused ec2-user from Duo Auth
-EOF
+echo "[duo]" >> /etc/duo/login_duo.conf
+echo "ikey = ${duo_ikey}" >> /etc/duo/login_duo.conf
+echo "skey = ${duo_skey}" >> /etc/duo/login_duo.conf
+echo "host = ${duo_host_api}" >> /etc/duo/login_duo.conf
+
 
 # Make OpenSSH execute a custom script on logins
 #echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
@@ -45,6 +43,7 @@ mount -o remount,rw,hidepid=2 /proc
 awk '!/proc/' /etc/fstab > temp && mv temp /etc/fstab
 echo "proc /proc proc defaults,hidepid=2 0 0" >> /etc/fstab
 
+echo "%wheel	ALL=(ALL)	ALL" >> /etc/sudoers
 # Restart the SSH service to apply /etc/ssh/sshd_config modifications.
 service sshd restart
 
@@ -93,7 +92,8 @@ while read line; do
     # Create a user account if it does not already exist
     cut -d: -f1 /etc/passwd | grep -qx $USER_NAME
     if [ $? -eq 1 ]; then
-      /usr/sbin/adduser --ingroup admin $USER_NAME && \
+      /usr/sbin/adduser $USER_NAME && \
+      /usr/sbin/usermod -aG wheel $USER_NAME \
       mkdir -m 700 /home/$USER_NAME/.ssh && \
       chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh && \
       echo "$line" >> ~/keys_installed && \
