@@ -24,10 +24,11 @@ echo > /etc/duo/login_duo.conf << 'EOF'
 ikey = ${duo_ikey}
 skey = ${duo_skey}
 host = ${duo_host_api}
+# Exclused ec2-user from Duo Auth
 EOF
 
 # Make OpenSSH execute a custom script on logins
-#echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
+echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
 
 # Block some SSH features that bastion host users could use to circumvent the solution
 awk '!/AllowTcpForwarding/' /etc/ssh/sshd_config > temp && mv temp /etc/ssh/sshd_config
@@ -74,12 +75,16 @@ cat > /usr/bin/bastion/sync_users << 'EOF'
 #!/usr/bin/env bash
 # The file will log user changes
 LOG_FILE="/var/log/bastion/users_changelog.txt"
+
 # The function returns the user name from the public key file name.
 # Example: public-keys/sshuser.pub => sshuser
+
 get_user_name () {
   echo "$1" | sed -e "s/.*\///g" | sed -e "s/\.pub//g"
 }
+
 # For each public key available in the S3 bucket
+
 aws s3api list-objects --bucket ${bucket_name} --prefix public-keys/ --region ${aws_region} --output text --query 'Contents[?Size>`0`].Key' | sed -e "s/\t/\n/" > ~/keys_retrieved_from_s3
 while read line; do
   USER_NAME="`get_user_name "$line"`"
@@ -88,7 +93,7 @@ while read line; do
     # Create a user account if it does not already exist
     cut -d: -f1 /etc/passwd | grep -qx $USER_NAME
     if [ $? -eq 1 ]; then
-      /usr/sbin/adduser $USER_NAME && \
+      /usr/sbin/adduser --ingroup admin $USER_NAME && \
       mkdir -m 700 /home/$USER_NAME/.ssh && \
       chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh && \
       echo "$line" >> ~/keys_installed && \
