@@ -122,6 +122,7 @@ resource "aws_iam_role" "bastion_host_role" {
   ]
 }
 EOF
+}
 
 resource "aws_iam_role_policy" "bastion_host_role_policy" {
   role = "${aws_iam_role.bastion_host_role.id}"
@@ -171,6 +172,7 @@ resource "aws_iam_role_policy" "bastion_host_role_policy" {
   ]
 }
 EOF
+}
 
 resource "aws_route53_record" "bastion_record_name" {
   name    = "${var.bastion_record_name}"
