@@ -28,7 +28,7 @@ host = ${duo_host_api}
 EOF
 
 # Make OpenSSH execute a custom script on logins
-echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
+#echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
 
 # Block some SSH features that bastion host users could use to circumvent the solution
 awk '!/AllowTcpForwarding/' /etc/ssh/sshd_config > temp && mv temp /etc/ssh/sshd_config
