@@ -29,8 +29,8 @@ echo "motd = yes"
 /usr/sbin/groupadd bastion
 
 echo > /etc/motd << 'EOF'
-***** ${var.company_name} Bastion Host *****
-This is a private system that that is controled by the ${var.company_name} Platform Team.
+***** ${company_name} Bastion Host *****
+This is a private system that that is controled by the ${company_name} Platform Team.
 Access to sudo is prohibited due to the fact it is NOT needed, contact the Platform Team if you have any questions.
 Access and commands are logged as well as MFA via Duo active for security reasons.
 Disconnect IMMEDIATELY if you are not an authorized user!
