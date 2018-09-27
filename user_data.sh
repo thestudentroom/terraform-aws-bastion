@@ -43,7 +43,9 @@ mount -o remount,rw,hidepid=2 /proc
 awk '!/proc/' /etc/fstab > temp && mv temp /etc/fstab
 echo "proc /proc proc defaults,hidepid=2 0 0" >> /etc/fstab
 
-#echo "%wheel	ALL=(ALL)	ALL" >> /etc/sudoers
+echo "%wheel	ALL=(ALL)	ALL" >> /etc/sudoers
+echo "%wheel	ALL=(ALL)	NOPASSWD: ALL" /etc/sudoers
+
 # Restart the SSH service to apply /etc/ssh/sshd_config modifications.
 service sshd restart
 
@@ -94,7 +96,6 @@ while read line; do
     if [ $? -eq 1 ]; then
       /usr/sbin/adduser $USER_NAME && \
       mkdir -m 700 /home/$USER_NAME/.ssh && \
-      /usr/sbin/usermod -aG wheel $USER_NAME \
       chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh && \
       echo "$line" >> ~/keys_installed && \
       echo "`date --date="today" "+%Y-%m-%d %H-%M-%S"`: Creating user account for $USER_NAME ($line)" >> $LOG_FILE
@@ -106,6 +107,7 @@ while read line; do
         aws s3 cp s3://${bucket_name}/$line /home/$USER_NAME/.ssh/authorized_keys --region ${aws_region}
         chmod 600 /home/$USER_NAME/.ssh/authorized_keys
         chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh/authorized_keys
+        /usr/sbin/usermod -aG wheel $USER_NAME
       fi
     fi
   fi
