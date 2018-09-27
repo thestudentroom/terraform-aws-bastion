@@ -146,6 +146,21 @@ resource "aws_iam_role_policy" "bastion_host_role_policy" {
     },
     {
       "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::${var.bucket_name}/private-keys/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::${var.bucket_name}",
+      "Condition": {
+        "StringEquals": {
+          "s3:prefix": "private-keys/"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
       "Action": "s3:ListBucket",
       "Resource": "arn:aws:s3:::${var.bucket_name}",
       "Condition": {
@@ -157,7 +172,6 @@ resource "aws_iam_role_policy" "bastion_host_role_policy" {
   ]
 }
 EOF
-}
 
 resource "aws_route53_record" "bastion_record_name" {
   name    = "${var.bastion_record_name}"
