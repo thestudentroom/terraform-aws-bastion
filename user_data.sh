@@ -23,6 +23,7 @@ echo "[duo]" >> /etc/duo/login_duo.conf
 echo "ikey = ${duo_ikey}" >> /etc/duo/login_duo.conf
 echo "skey = ${duo_skey}" >> /etc/duo/login_duo.conf
 echo "host = ${duo_host_api}" >> /etc/duo/login_duo.conf
+echo "groups = bastion" >> /etc/duo/login_duo.conf
 
 /usr/sbin/addgroup bastion
 
