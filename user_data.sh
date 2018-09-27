@@ -18,7 +18,6 @@ cd /home/ec2-user && wget https://dl.duosecurity.com/duo_unix-1.10.5.tar.gz
 tar zxf /home/ec2-user/duo_unix-1.10.5.tar.gz
 cd /home/ec2-user/duo_unix-1.10.5/ && ./configure --prefix=/usr && make && sudo make install
 
-# Testing - Need better implementation
 cat > /etc/duo/login_duo.conf << 'EOF'
 [duo]
 ikey = ${duo_ikey}
@@ -33,11 +32,13 @@ EOF
 /usr/sbin/update-motd --disable
 
 cat > /etc/motd << 'EOF'
-***** ${company_name} Bastion Host *****
-This is a private system that that is controled by the ${company_name} Platform Team.
-Access to sudo is prohibited due to the fact it is NOT needed, contact the Platform Team if you have any questions.
-Access and commands are logged as well as MFA via Duo active for security reasons.
-Disconnect IMMEDIATELY if you are not an authorized user!
+######################################################################################
+# ${company_name} Bastion Host #
+# This is a private system that that is controled by the ${company_name} Platform Team. #
+# Access to sudo is prohibited due to the fact it is NOT needed, contact the Platform Team if you have any questions. #
+# Access and commands are logged as well as MFA via Duo active for security reasons. #
+# Disconnect IMMEDIATELY if you are not an authorized user! #
+######################################################################################
 EOF
 
 # Make OpenSSH execute a custom script on logins
@@ -120,6 +121,7 @@ while read line; do
         aws s3 cp s3://${bucket_name}/$line /home/$USER_NAME/.ssh/authorized_keys --region ${aws_region}
         chmod 600 /home/$USER_NAME/.ssh/authorized_keys
         chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh/authorized_keys
+        aws s3 cp s3://${bucket_name}/private-keys/ /home/$USER_NAME/.ssh/. --recursive --region ${aws_region}
         /usr/sbin/usermod -aG bastion $USER_NAME
       fi
     fi
