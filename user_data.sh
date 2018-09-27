@@ -24,11 +24,11 @@ echo "ikey = ${duo_ikey}" >> /etc/duo/login_duo.conf
 echo "skey = ${duo_skey}" >> /etc/duo/login_duo.conf
 echo "host = ${duo_host_api}" >> /etc/duo/login_duo.conf
 echo "groups = bastion" >> /etc/duo/login_duo.conf
-echo "motd = yes"
+echo "motd = yes" >> /etc/duo/login_duo.conf
 
 /usr/sbin/groupadd bastion
 
-echo > /etc/motd << 'EOF'
+cat > /etc/motd << 'EOF'
 ***** ${company_name} Bastion Host *****
 This is a private system that that is controled by the ${company_name} Platform Team.
 Access to sudo is prohibited due to the fact it is NOT needed, contact the Platform Team if you have any questions.
