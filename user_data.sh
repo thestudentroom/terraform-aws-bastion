@@ -26,7 +26,7 @@ echo "host = ${duo_host_api}" >> /etc/duo/login_duo.conf
 
 
 # Make OpenSSH execute a custom script on logins
-#echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
+echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
 
 # Block some SSH features that bastion host users could use to circumvent the solution
 awk '!/AllowTcpForwarding/' /etc/ssh/sshd_config > temp && mv temp /etc/ssh/sshd_config
@@ -43,7 +43,6 @@ mount -o remount,rw,hidepid=2 /proc
 awk '!/proc/' /etc/fstab > temp && mv temp /etc/fstab
 echo "proc /proc proc defaults,hidepid=2 0 0" >> /etc/fstab
 
-echo "%wheel	ALL=(ALL)	ALL" >> /etc/sudoers
 echo "%wheel	ALL=(ALL)	NOPASSWD: ALL" /etc/sudoers
 
 # Restart the SSH service to apply /etc/ssh/sshd_config modifications.
