@@ -122,7 +122,6 @@ resource "aws_iam_role" "bastion_host_role" {
   ]
 }
 EOF
-}
 
 resource "aws_iam_role_policy" "bastion_host_role_policy" {
   role = "${aws_iam_role.bastion_host_role.id}"
