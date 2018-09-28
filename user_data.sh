@@ -120,16 +120,30 @@ while read line; do
       if [ $? -eq 0 ]; then
         aws s3 cp s3://${bucket_name}/$line /home/$USER_NAME/.ssh/authorized_keys --region ${aws_region}
         chmod 600 /home/$USER_NAME/.ssh/authorized_keys
-        chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh/authorized_keys
-        aws s3 cp s3://${bucket_name}/private-keys/ /home/$USER_NAME/.ssh/. --recursive --region ${aws_region}
-        cat > /home/$USER_NAME/.ssh/config << 'EOF'
-        Host *
-          User ubuntu
-          IdentityFile /home/${USER_NAME}/.ssh/packer.key
-        Host *prd.eu-west-1.aws*
-          User access
-          IdentityFile /home/${USER_NAME}/.ssh/production_access.key
-        EOF
+        chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh/authorized_keys]
+        aws s3 cp s3://${bucket_name}/private-keys/ /home/$USER_NAME/. --recursive --region ${aws_region}
+        NEW_MD5_PACKER = "`md5sum /home/$USER_NAME/packer.key | awk '{print $1}'`"
+        NEW_MD5_ACCESS = "`md5sum /home/$USER_NAME/production_access.key | awk '{print $1}'`"
+        OLD_MD5_PACKER = "`md5sum /home/$USER_NAME/.ssh/packer.key | awk '{print $1}'`"
+        OLD_MD5_ACCESS = "`md5sum /home/$USER_NAME/.ssh/production_access.key | awk '{print $1}'`"
+        if ! cmp --silent "$MD5_PACKER" "$OLD_MD5_PACKER"; then
+          /bin/rm /home/$USER_NAME/.ssh/packer.key
+          /bin/mv /home/$USER_NAME/packer.key /home/$USER_NAME/.ssh/packer.key
+        else
+          echo "Packer key NOT updated" >> /var/log/bastion/packer_key_update.log
+        fi
+        if ! cmp --silent "$MD5_ACCESS" "$OLD_MD5_ACCESS"; then
+          /bin/rm /home/$USER_NAME/.ssh/production_access.key
+          /bin/mv /home/$USER_NAME/production_access.key /home/$USER_NAME/.ssh/production_access.key
+        else
+          echo "Production Access key NOT updated" >> /var/log/bastion/production_access_update.log
+        fi
+        echo "Host *" >> /home/$USER_NAME/.ssh/config
+        echo "  User ubuntu" >> /home/$USER_NAME/.ssh/config
+        echo "  IdentityFile /home/$USER_NAME/.ssh/packer.key" >> /home/$USER_NAME/.ssh/config
+        echo "Host *prd.eu-west-1.aws*" >> /home/$USER_NAME/.ssh/config
+        echo "  User access" >> /home/$USER_NAME/.ssh/config
+        echo "  IdentityFile /home/$USER_NAME/.ssh/production_access.key" >> /home/$USER_NAME/.ssh/config
         /usr/sbin/usermod -aG bastion $USER_NAME
       fi
     fi
