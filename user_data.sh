@@ -138,17 +138,18 @@ while read line; do
         else
           echo "Production Access key NOT updated" >> /var/log/bastion/production_access_update.log
         fi
-        echo "Host *" >> /home/$USER_NAME/.ssh/config
-        echo "  User ubuntu" >> /home/$USER_NAME/.ssh/config
-        echo "  IdentityFile /home/$USER_NAME/.ssh/packer.key" >> /home/$USER_NAME/.ssh/config
-        echo "Host *prd.eu-west-1.aws*" >> /home/$USER_NAME/.ssh/config
-        echo "  User access" >> /home/$USER_NAME/.ssh/config
-        echo "  IdentityFile /home/$USER_NAME/.ssh/production_access.key" >> /home/$USER_NAME/.ssh/config
         /usr/sbin/usermod -aG bastion $USER_NAME
       fi
     fi
   fi
 done < ~/keys_retrieved_from_s3
+cat /dev/null >/home/$USER_NAME/.ssh/config
+echo "Host *" >> /home/$USER_NAME/.ssh/config
+echo "  User ubuntu" >> /home/$USER_NAME/.ssh/config
+echo "  IdentityFile /home/$USER_NAME/.ssh/packer.key" >> /home/$USER_NAME/.ssh/config
+echo "Host *prd.eu-west-1.aws*" >> /home/$USER_NAME/.ssh/config
+echo "  User access" >> /home/$USER_NAME/.ssh/config
+echo "  IdentityFile /home/$USER_NAME/.ssh/production_access.key" >> /home/$USER_NAME/.ssh/config
 # Remove user accounts whose public key was deleted from S3
 if [ -f ~/keys_installed ]; then
   sort -uo ~/keys_installed ~/keys_installed
