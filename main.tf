@@ -198,10 +198,11 @@ resource "aws_lb" "bastion_lb" {
 }
 
 resource "aws_lb_target_group" "bastion_lb_target_group" {
-  port        = "22"
-  protocol    = "TCP"
-  vpc_id      = "${var.vpc_id}"
-  target_type = "instance"
+  port         = "22"
+  protocol     = "TCP"
+  vpc_id       = "${var.vpc_id}"
+  target_type  = "instance"
+  idle_timeout = 400
 
   health_check {
     port     = "traffic-port"
