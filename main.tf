@@ -188,7 +188,7 @@ resource "aws_route53_record" "bastion_record_name" {
 
 resource "aws_lb" "bastion_lb" {
   internal     = "${var.is_lb_private}"
-  idle_timeout = 400
+  idle_timeout = 600
 
   subnets = [
     "${var.elb_subnets}",
