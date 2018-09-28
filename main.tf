@@ -187,7 +187,8 @@ resource "aws_route53_record" "bastion_record_name" {
 }
 
 resource "aws_lb" "bastion_lb" {
-  internal = "${var.is_lb_private}"
+  internal     = "${var.is_lb_private}"
+  idle_timeout = 400
 
   subnets = [
     "${var.elb_subnets}",
@@ -198,11 +199,10 @@ resource "aws_lb" "bastion_lb" {
 }
 
 resource "aws_lb_target_group" "bastion_lb_target_group" {
-  port         = "22"
-  protocol     = "TCP"
-  vpc_id       = "${var.vpc_id}"
-  target_type  = "instance"
-  idle_timeout = 400
+  port        = "22"
+  protocol    = "TCP"
+  vpc_id      = "${var.vpc_id}"
+  target_type = "instance"
 
   health_check {
     port     = "traffic-port"
