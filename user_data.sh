@@ -125,10 +125,10 @@ while read line; do
         cat > /home/$USER_NAME/.ssh/config << 'EOF'
         Host *
           User ubuntu
-          IdentityFile /home/$USER_NAME/.ssh/packer.key
+          IdentityFile /home/${USER_NAME}/.ssh/packer.key
         Host *prd.eu-west-1.aws*
           User access
-          IdentityFile /home/$USER_NAME/.ssh/production_access.key
+          IdentityFile /home/${USER_NAME}/.ssh/production_access.key
         EOF
         /usr/sbin/usermod -aG bastion $USER_NAME
       fi
