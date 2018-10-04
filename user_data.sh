@@ -48,8 +48,8 @@ echo -e "\\nForceCommand /usr/sbin/login_duo" >> /etc/ssh/sshd_config
 awk '!/AllowTcpForwarding/' /etc/ssh/sshd_config > temp && mv temp /etc/ssh/sshd_config
 awk '!/PermitTunnel/' /etc/ssh/sshd_config > temp && mv temp /etc/ssh/sshd_config
 awk '!/X11Forwarding/' /etc/ssh/sshd_config > temp && mv temp /etc/ssh/sshd_config
-echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
-echo "PermitTunnel no" >> /etc/ssh/sshd_config
+echo "AllowTcpForwarding yes" >> /etc/ssh/sshd_config
+echo "PermitTunnel yes" >> /etc/ssh/sshd_config
 echo "X11Forwarding no" >> /etc/ssh/sshd_config
 echo 'ClientAliveInterval 60' >> /etc/ssh/sshd_config
 
