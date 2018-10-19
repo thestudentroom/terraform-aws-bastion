@@ -173,7 +173,7 @@ cat > /usr/bin/bastion/assign_eip << 'EOF'
 #!/usr/bin/env bash
 
 INSTANCEID=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
-PUBLICIP=`aws --region eu-west-1 ec2 describe-addresses --filter "Name=tag:Bastion,Values=true" | grep PublicIp | awk '{print $2}' | tr -d '",' | head -n1`
+PUBLICIP=`aws --region eu-west-1 ec2 describe-addresses --filter "Name=tag:Bastion,Values=1" | grep PublicIp | awk '{print $2}' | tr -d '",' | head -n1`
 
 echo $INSTANCEID
 echo $PUBLICIP
