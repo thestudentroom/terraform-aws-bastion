@@ -5,3 +5,7 @@ output "bucket_name" {
 output "private_instances_security_group" {
   value = "${aws_security_group.private_instances_security_group.id}"
 }
+
+output "aws_eip" {
+  value = "${aws_eip.eip.*.public_ip}"
+}

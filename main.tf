@@ -163,17 +163,6 @@ resource "aws_iam_role_policy" "bastion_host_role_policy" {
 EOF
 }
 
-resource "aws_route53_record" "bastion_record_name" {
-  name    = "${var.bastion_record_name}"
-  type    = "A"
-  zone_id = "${var.hosted_zone_name}"
-  ttl     = 300
-
-  records = [
-    "${aws_eip.eip.*.public_ip}",
-  ]
-}
-
 resource "aws_iam_instance_profile" "bastion_host_profile" {
   role = "${aws_iam_role.bastion_host_role.name}"
   path = "/"
