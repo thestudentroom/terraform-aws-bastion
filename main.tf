@@ -172,7 +172,7 @@ resource "aws_launch_configuration" "bastion_launch_configuration" {
   image_id                    = "${lookup(var.bastion_amis, var.region)}"
   instance_type               = "t2.nano"
   enable_monitoring           = true
-  associate_public_ip_address = "0"
+  associate_public_ip_address = false
   iam_instance_profile        = "${aws_iam_instance_profile.bastion_host_profile.name}"
   key_name                    = "${var.bastion_host_key_pair}"
 
