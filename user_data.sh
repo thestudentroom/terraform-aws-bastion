@@ -63,6 +63,22 @@ echo "proc /proc proc defaults,hidepid=2 0 0" >> /etc/fstab
 # Restart the SSH service to apply /etc/ssh/sshd_config modifications.
 service sshd restart
 
+cat > /usr/bin/bastion/assign_eip << 'EOF'
+#!/usr/bin/env bash
+
+INSTANCEID=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
+PUBLICIP=`aws --region eu-west-1 ec2 describe-addresses --filter "Name=tag:Bastion,Values=1" | grep PublicIp | awk '{print $2}' | tr -d '",' | head -n1`
+
+echo $INSTANCEID
+echo $PUBLICIP
+
+aws --region eu-west-1 ec2 associate-address --instance-id $INSTANCEID --public-ip $PUBLICIP
+EOF
+
+chmod 700 /usr/bin/bastion/assign_eip
+
+/usr/bin/bastion/assign_eip >> /var/log/bastion/assign_eip.txt
+
 ############################
 ## EXPORT LOG FILES TO S3 ##
 ############################
@@ -168,22 +184,6 @@ chmod 700 /usr/bin/bastion/sync_users
 
 /usr/bin/bastion/sync_users >> /var/log/bastion/sync_users_first_run.txt
 
-
-cat > /usr/bin/bastion/assign_eip << 'EOF'
-#!/usr/bin/env bash
-
-INSTANCEID=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
-PUBLICIP=`aws --region eu-west-1 ec2 describe-addresses --filter "Name=tag:Bastion,Values=1" | grep PublicIp | awk '{print $2}' | tr -d '",' | head -n1`
-
-echo $INSTANCEID
-echo $PUBLICIP
-
-aws --region eu-west-1 ec2 associate-address --instance-id $INSTANCEID --public-ip $PUBLICIP
-EOF
-
-chmod 700 /usr/bin/bastion/assign_eip
-
-/usr/bin/bastion/assign_eip >> /var/log/bastion/assign_eip.txt
 ###########################################
 ## SCHEDULE SCRIPTS AND SECURITY UPDATES ##
 ###########################################
