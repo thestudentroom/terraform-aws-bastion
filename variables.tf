@@ -27,11 +27,6 @@ variable "bastion_host_key_pair" {
   description = "Select the key pair to use to launch the bastion host"
 }
 
-variable "hosted_zone_name" {
-  description = "Name of the hosted zone were we'll register the bastion DNS name"
-  default     = ""
-}
-
 variable "bastion_record_name" {
   description = "DNS record name to use for the bastion"
   default     = ""
