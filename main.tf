@@ -38,7 +38,6 @@ resource "aws_s3_bucket" "bucket" {
   tags = "${merge(var.tags)}"
 }
 
-resource "aws_security_group" "private_instances_security_group" {
 resource "aws_iam_role" "bastion_host_role" {
   name = "bastion_host_role"
   path = "/"
