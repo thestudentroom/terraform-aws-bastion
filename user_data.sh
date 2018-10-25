@@ -178,12 +178,12 @@ PUBLICIP=`aws --region eu-west-1 ec2 describe-addresses --filter "Name=tag:Basti
 echo $INSTANCEID
 echo $PUBLICIP
 
-aws --region eu-west-1 ec2 associate-address --instance-id $INSTANCEID  --public-ip $PUBLICIP
+aws --region eu-west-1 ec2 associate-address --instance-id $INSTANCEID --public-ip $PUBLICIP
 EOF
 
 chmod 700 /usr/bin/bastion/assign_eip
 
-/usr/bin/bastion/setup_dns >> /var/log/bastion/setup_dns.txt
+/usr/bin/bastion/assign_eip >> /var/log/bastion/assign_eip.txt
 ###########################################
 ## SCHEDULE SCRIPTS AND SECURITY UPDATES ##
 ###########################################
